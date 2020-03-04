@@ -1,9 +1,7 @@
 package ru.pethelper.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.pethelper.dao.PetRepository;
 import ru.pethelper.model.Pet;
 
@@ -16,7 +14,14 @@ public class PetController {
     PetRepository petRepository;
 
     @GetMapping("/findAll")
-    public List<Pet> findAll() {
+    List<Pet> findAll() {
         return petRepository.findAll();
+    }
+
+    @PostMapping(path = "/addPet", consumes = "application/json", produces = "application/json")
+    void addPet(@RequestBody List<Pet> petList) {
+        for(Pet pet : petList) {
+            petRepository.save(pet);
+        }
     }
 }
