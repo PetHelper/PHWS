@@ -1,6 +1,8 @@
 package ru.pethelper.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.pethelper.dao.PetRepository;
 import ru.pethelper.model.Pet;
@@ -14,14 +16,15 @@ public class PetController {
     PetRepository petRepository;
 
     @GetMapping("/findAll")
-    List<Pet> findAll() {
-        return petRepository.findAll();
+    ResponseEntity findAll() {
+        return new ResponseEntity(petRepository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping(path = "/addPet", consumes = "application/json", produces = "application/json")
-    void addPet(@RequestBody List<Pet> petList) {
+    ResponseEntity addPet(@RequestBody List<Pet> petList) {
         for(Pet pet : petList) {
             petRepository.save(pet);
         }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
