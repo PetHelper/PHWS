@@ -11,6 +11,7 @@ import ru.pethelper.dao.UserRepository;
 import ru.pethelper.model.Role;
 import ru.pethelper.model.User;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -27,7 +28,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), passwordEncoder.encode(user.getPassword()),
+                new ArrayList<>());
     }
 
     public boolean addUser(User user) {
