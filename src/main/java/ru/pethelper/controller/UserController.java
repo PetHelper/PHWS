@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping(path = "/register", consumes = "application/json", produces = "application/json")
     ResponseEntity register(@RequestBody @Valid User user, BindingResult result) {
         if (!userService.addUser(user)) {
-            return new ResponseEntity("User already exists!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("User with this USERNAME/EMAIL already exists!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
     }

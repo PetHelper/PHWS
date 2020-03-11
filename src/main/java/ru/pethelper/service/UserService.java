@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.pethelper.dao.UserRepository;
@@ -21,21 +22,25 @@ public class UserService implements UserDetailsService {
     @Autowired
     private MailSender mailSender;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
     }
 
     public boolean addUser(User user) {
-        User userFromDb = userRepo.findByUsername(user.getUsername());
+        //User userFromDb = userRepo.findByUsername(user.getUsername());
 
-        if (userFromDb != null) {
+        if (userRepo.findByUsername(user.getUsername()) != null || userRepo.findByEmail(user.getEmail()) != null) {
             return false;
         }
 
-        user.setActive(true);
+        user.setActive(false);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepo.save(user);
 
@@ -60,6 +65,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
+        user.setActive(true);
         user.setActivationCode(null);
 
         userRepo.save(user);
