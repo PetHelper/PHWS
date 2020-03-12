@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Long> {
-    List<Pet> findByName(String district);
+    List<Pet> findByName(String name);
 }

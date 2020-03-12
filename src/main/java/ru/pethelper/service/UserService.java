@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to PetHelper. Please, visit next link: http://localhost:8080/user/activate/%s",
+                            "Welcome to PetHelper. Please, visit next link: https://localhost:8443/user/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
             );
