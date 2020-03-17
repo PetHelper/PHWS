@@ -3,12 +3,14 @@ package ru.pethelper.model;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.pethelper.validation.ValidPassword;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,21 +20,24 @@ public class UserEntity implements UserDetails {
     @Basic
     @Column(name = "user_id", nullable = false)
     @NaturalId
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int userId;
     @Basic
     @Column(name = "user_name", nullable = false, length = 50)
     @NotBlank(message = "Username cannot be empty")
+    @NotNull(message = "Username could not be NULL")
     private String username;
     @Basic
     @Column(name = "user_surname", nullable = false, length = 50)
     private String userSurname;
     @Basic
-    @Column(name = "user_address", nullable = true, length = 50)
+    @Column(name = "user_address", length = 50)
     private String userAddress;
     @Basic
     @Column(name = "user_email", nullable = false, length = 30)
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not correct")
+    @NotNull(message = "Email could not be NULL")
     private String userEmail;
     @Basic
     @Column(name = "user_reg_date", nullable = false)
@@ -44,23 +49,21 @@ public class UserEntity implements UserDetails {
     private Date userBirthDate;
     @Id
     @Column(name = "user_phone", nullable = false)
-    @NotBlank(message = "Phone could not be empty")
+    @NotNull(message = "Phone could not be empty")
     private long userPhone;
     @Basic
     @Column(name = "password", nullable = false)
     @NotBlank(message = "Password could not be empty")
+    @NotNull(message = "Password could not be NULL")
+    @ValidPassword
     private String password;
     @Transient
-    @NotBlank(message = "Password confirmation could not be empty")
     private String matchingPassword;
     @Basic
     @Column(name = "active", nullable = false)
     private boolean active;
     @Basic
-    @Column(name = "email", nullable = false)
-    private String email;
-    @Basic
-    @Column(name = "activation_code", nullable = false)
+    @Column(name = "activation_code")
     private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -215,14 +218,6 @@ public class UserEntity implements UserDetails {
 
     public void setUserPhone(long userPhone) {
         this.userPhone = userPhone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)

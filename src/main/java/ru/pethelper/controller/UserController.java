@@ -44,11 +44,20 @@ public class UserController {
 
     @PostMapping(path = "/register", consumes = "application/json", produces = "application/json")
     ResponseEntity register(@RequestBody @Valid UserEntity user) throws Exception {
-        if (!userService.addUser(user)) {
-            return new ResponseEntity("User with this USERNAME/EMAIL already exists!", HttpStatus.BAD_REQUEST);
-        }
         if (user.getPassword() != null && !user.getPassword().equals(user.getMatchingPassword())) {
             return new ResponseEntity("Passwords dont match!", HttpStatus.BAD_REQUEST);
+        }
+        long addUserStatus = userService.addUser(user);
+        if (addUserStatus != 0) {
+            if (addUserStatus == 2) {
+                return new ResponseEntity("User with this USERNAME already exists!", HttpStatus.BAD_REQUEST);
+            }
+            if (addUserStatus == 3) {
+                return new ResponseEntity("User with this EMAIL already exists!", HttpStatus.BAD_REQUEST);
+            }
+            if (addUserStatus == 4) {
+                return new ResponseEntity("User with this PhoneNumber already exists!", HttpStatus.BAD_REQUEST);
+            }
         }
         String token = createAuthenticationToken(new JwtRequest(user.getUsername(),user.getPassword()));
         return new ResponseEntity(new JwtResponse(token), HttpStatus.OK);

@@ -37,14 +37,21 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public boolean addUser(UserEntity user) {
-        //User userFromDb = userRepo.findByUsername(user.getUsername());
+    public long addUser(UserEntity user) {
+        //UserEntity userFromDb = userRepo.findByUsername(user.getUsername());
 
-        if (userRepo.findByUsername(user.getUsername()) != null || userRepo.findByEmail(user.getUserEmail()) != null) {
-            return false;
+        if (userRepo.findByUsername(user.getUsername()) != null) {
+            return 2;
+        }
+        if (userRepo.findByUserEmail(user.getUserEmail()) != null) {
+            return 3;
+        }
+        if (userRepo.findByUserPhone(user.getUserPhone()) != null) {
+            return 4;
         }
 
         user.setUserRegDate(new Date());
+        user.setUserBirthDate(new Date());
         user.setActive(false);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
@@ -63,7 +70,7 @@ public class UserService implements UserDetailsService {
             mailSender.send(user.getUserEmail(), "Activation code", message);
         }
 
-        return true;
+        return 0;
     }
 
     public boolean activateUser(String code) {
