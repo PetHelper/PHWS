@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.pethelper.dao.PetRepository;
-import ru.pethelper.model.Pet;
+import ru.pethelper.model.PetEntity;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class PetController {
     }
 
     @PostMapping(path = "/addPet", consumes = "application/json", produces = "application/json")
-    ResponseEntity addPet(@RequestBody List<Pet> petList) {
-        for(Pet pet : petList) {
+    ResponseEntity addPet(@RequestBody List<PetEntity> petList) {
+        for(PetEntity pet : petList) {
             petRepository.save(pet);
         }
         return new ResponseEntity(HttpStatus.OK);

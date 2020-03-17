@@ -9,13 +9,12 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.pethelper.config.JwtTokenUtil;
 import ru.pethelper.dao.UserRepository;
 import ru.pethelper.model.JwtRequest;
 import ru.pethelper.model.JwtResponse;
-import ru.pethelper.model.User;
+import ru.pethelper.model.UserEntity;
 import ru.pethelper.service.UserService;
 
 import javax.validation.Valid;
@@ -44,9 +43,12 @@ public class UserController {
     }
 
     @PostMapping(path = "/register", consumes = "application/json", produces = "application/json")
-    ResponseEntity register(@RequestBody @Valid User user, BindingResult result) throws Exception {
+    ResponseEntity register(@RequestBody @Valid UserEntity user) throws Exception {
         if (!userService.addUser(user)) {
             return new ResponseEntity("User with this USERNAME/EMAIL already exists!", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getPassword() != null && !user.getPassword().equals(user.getMatchingPassword())) {
+            return new ResponseEntity("Passwords dont match!", HttpStatus.BAD_REQUEST);
         }
         String token = createAuthenticationToken(new JwtRequest(user.getUsername(),user.getPassword()));
         return new ResponseEntity(new JwtResponse(token), HttpStatus.OK);
@@ -64,7 +66,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
+    public void signUp(@RequestBody UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.pethelper.dao.UserRepository;
 import ru.pethelper.model.Role;
-import ru.pethelper.model.User;
+import ru.pethelper.model.UserEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -28,7 +29,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
+        UserEntity user = userRepo.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
@@ -36,13 +37,14 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public boolean addUser(User user) {
+    public boolean addUser(UserEntity user) {
         //User userFromDb = userRepo.findByUsername(user.getUsername());
 
-        if (userRepo.findByUsername(user.getUsername()) != null || userRepo.findByEmail(user.getEmail()) != null) {
+        if (userRepo.findByUsername(user.getUsername()) != null || userRepo.findByEmail(user.getUserEmail()) != null) {
             return false;
         }
 
+        user.setUserRegDate(new Date());
         user.setActive(false);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
@@ -50,7 +52,7 @@ public class UserService implements UserDetailsService {
 
         userRepo.save(user);
 
-        if (!StringUtils.isEmpty(user.getEmail())) {
+        if (!StringUtils.isEmpty(user.getUserEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
                             "Welcome to PetHelper. Please, visit next link: https://localhost:8443/user/activate/%s",
@@ -58,14 +60,14 @@ public class UserService implements UserDetailsService {
                     user.getActivationCode()
             );
 
-            mailSender.send(user.getEmail(), "Activation code", message);
+            mailSender.send(user.getUserEmail(), "Activation code", message);
         }
 
         return true;
     }
 
     public boolean activateUser(String code) {
-        User user = userRepo.findByActivationCode(code);
+        UserEntity user = userRepo.findByActivationCode(code);
 
         if (user == null) {
             return false;
