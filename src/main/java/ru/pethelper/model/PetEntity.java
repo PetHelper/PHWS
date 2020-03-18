@@ -153,7 +153,7 @@ public class PetEntity {
         return Objects.hash(petId, petName, colour, weight, breed, sex, distMarks, tagNumber, pedigreeNum, animalCardNum, birthDate);
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 

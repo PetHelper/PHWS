@@ -220,6 +220,6 @@ public class UserEntity implements UserDetails {
         this.userPhone = userPhone;
     }
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.PERSIST)
     private Set<PetEntity> petEntities;
 }

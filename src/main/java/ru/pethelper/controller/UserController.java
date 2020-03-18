@@ -74,10 +74,15 @@ public class UserController {
         }
     }
 
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody UserEntity user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    @GetMapping("/sign-in")
+    public ResponseEntity signIn(@RequestParam(name = "email") String email) throws Exception {
+        UserEntity user = userRepository.findByUserEmail(email);
+        if (user.isActive()) {
+            String token = createAuthenticationToken(new JwtRequest(user.getUsername(),user.getPassword()));
+            return new ResponseEntity(new JwtResponse(token), HttpStatus.OK);
+        } else {
+            return new ResponseEntity("You must activate your user on your email", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public String createAuthenticationToken(JwtRequest authenticationRequest)
