@@ -1,4 +1,4 @@
-package ru.pethelper.validation;
+package ru.pethelper.servlet.validation;
 
 import com.google.common.base.Joiner;
 import org.passay.*;

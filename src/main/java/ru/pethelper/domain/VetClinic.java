@@ -1,30 +1,13 @@
-package ru.pethelper.model;
+package ru.pethelper.domain;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "vetclinic")
 public class VetClinic {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
     private String address;
     private String district;
     private Integer rate;
     private String name;
     private String site;
     private String email;
-    @Basic
-    @Column(name = "phone_numbers")
     private String phoneNumbers;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getAddress() {
         return address;

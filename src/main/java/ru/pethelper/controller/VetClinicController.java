@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.pethelper.dao.VetClinicRepository;
+import ru.pethelper.service.VetClinicService;
 
 @RestController
 @RequestMapping("vetclinic")
 public class VetClinicController {
     @Autowired
-    VetClinicRepository vetRepository;
+    VetClinicService vetClinicService;
 
     @GetMapping("/find")
     ResponseEntity getVetClinicsByDistrict(@RequestParam(name = "district") String district) {
-        return new ResponseEntity(vetRepository.findByDistrict(district), HttpStatus.OK);
+        return new ResponseEntity(vetClinicService.findVetClinicByDistrict(district), HttpStatus.OK);
     }
 }

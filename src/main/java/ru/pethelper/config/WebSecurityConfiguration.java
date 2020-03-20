@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.pethelper.service.UserService;
+import ru.pethelper.service.impl.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +23,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
@@ -50,9 +50,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/user/register").permitAll()
-                .antMatchers("/user/activate/**").permitAll()
-                .antMatchers("/user/sign-in**").permitAll()
+                .authorizeRequests().antMatchers("/register").permitAll()
+                .antMatchers("/activate/**").permitAll()
+                .antMatchers("/sign-in**").permitAll()
                 // all other requests need to be authenticated
                         .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to

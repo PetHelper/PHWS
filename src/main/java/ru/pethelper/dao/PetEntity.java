@@ -1,4 +1,4 @@
-package ru.pethelper.model;
+package ru.pethelper.dao;
 
 import javax.persistence.*;
 import java.sql.Date;

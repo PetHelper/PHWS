@@ -1,9 +1,9 @@
-package ru.pethelper.model;
+package ru.pethelper.dao;
 
 import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.pethelper.validation.ValidPassword;
+import ru.pethelper.servlet.validation.ValidPassword;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -24,8 +24,6 @@ public class UserEntity implements UserDetails {
     private int userId;
     @Basic
     @Column(name = "user_name", nullable = false, length = 50)
-    @NotBlank(message = "Username cannot be empty")
-    @NotNull(message = "Username could not be NULL")
     private String username;
     @Basic
     @Column(name = "user_surname", nullable = false, length = 50)
@@ -35,9 +33,6 @@ public class UserEntity implements UserDetails {
     private String userAddress;
     @Basic
     @Column(name = "user_email", nullable = false, length = 30)
-    @NotBlank(message = "Email cannot be empty")
-    @Email(message = "Email is not correct")
-    @NotNull(message = "Email could not be NULL")
     private String userEmail;
     @Basic
     @Column(name = "user_reg_date", nullable = false)
@@ -49,16 +44,10 @@ public class UserEntity implements UserDetails {
     private Date userBirthDate;
     @Id
     @Column(name = "user_phone", nullable = false)
-    @NotNull(message = "Phone could not be empty")
     private long userPhone;
     @Basic
     @Column(name = "password", nullable = false)
-    @NotBlank(message = "Password could not be empty")
-    @NotNull(message = "Password could not be NULL")
-    @ValidPassword
     private String password;
-    @Transient
-    private String matchingPassword;
     @Basic
     @Column(name = "active", nullable = false)
     private boolean active;
@@ -158,14 +147,6 @@ public class UserEntity implements UserDetails {
 
     public void setActivationCode(String activationCode) {
         this.activationCode = activationCode;
-    }
-
-    public String getMatchingPassword() {
-        return matchingPassword;
-    }
-
-    public void setMatchingPassword(String matchingPassword) {
-        this.matchingPassword = matchingPassword;
     }
 
     public int getUserId() {

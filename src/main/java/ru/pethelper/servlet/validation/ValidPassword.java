@@ -1,4 +1,4 @@
-package ru.pethelper.validation;
+package ru.pethelper.servlet.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

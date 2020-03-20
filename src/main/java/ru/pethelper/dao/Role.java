@@ -1,4 +1,4 @@
-package ru.pethelper.model;
+package ru.pethelper.dao;
 
 import org.springframework.security.core.GrantedAuthority;
 

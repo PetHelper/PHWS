@@ -1,4 +1,4 @@
-package ru.pethelper.model;
+package ru.pethelper.servlet;
 
 import java.io.Serializable;
 
