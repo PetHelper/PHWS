@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!StringUtils.isEmpty(user.getUserEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to PetHelper. Please, visit next link: https://localhost:8443/user/activate/%s",
+                            "Welcome to PetHelper. Please, visit next link: https://localhost:8443/activate/%s",
                     userEntity.getUsername(),
                     userEntity.getActivationCode()
             );
