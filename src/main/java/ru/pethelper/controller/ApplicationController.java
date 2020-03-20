@@ -29,14 +29,10 @@ import java.util.Objects;
 @CrossOrigin
 public class ApplicationController {
     @Autowired
-    UserRepository userRepository;
-    @Autowired
     private UserServiceImpl userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public ApplicationController(UserRepository userRepository,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public ApplicationController(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
