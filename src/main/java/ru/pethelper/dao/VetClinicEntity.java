@@ -6,7 +6,8 @@ import javax.persistence.*;
 @Table(name = "vetclinic")
 public class VetClinicEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vetclinic_id_generator")
+    @SequenceGenerator(name = "vetclinic_id_generator", sequenceName = "vetclinic_id_seq", allocationSize = 1)
     private long id;
     private String address;
     private String district;
