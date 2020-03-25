@@ -1,6 +1,7 @@
 package ru.pethelper.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +46,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Value("${application.activate.url}")
+    private String activateUrl;
+
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepo.findByUsername(username);
         if (user == null) {
@@ -80,7 +84,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!StringUtils.isEmpty(user.getUserEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to PetHelper. Please, visit next link: https://localhost:8443/activate/%s",
+                            "Welcome to PetHelper. Please, visit next link: " + activateUrl + "/activate/%s",
                     userEntity.getUsername(),
                     userEntity.getActivationCode()
             );
