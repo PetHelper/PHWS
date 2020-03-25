@@ -17,10 +17,10 @@ import java.util.Set;
 @Entity
 @Table(name = "user", schema = "pet", catalog = "pethelper")
 public class UserEntity implements UserDetails {
-    @Basic
-    @Column(name = "user_id", nullable = false)
-    @NaturalId
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_user_id_generator")
+    @SequenceGenerator(name = "pet_user_id_generator", sequenceName = "pet_user_id_seq", allocationSize = 1)
     private int userId;
     @Basic
     @Column(name = "user_name", nullable = false, length = 50)
@@ -32,7 +32,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "user_address", length = 50)
     private String userAddress;
     @Basic
-    @Column(name = "user_email", nullable = false, length = 30)
+    @Column(name = "user_email", nullable = false, length = 100)
     private String userEmail;
     @Basic
     @Column(name = "user_reg_date", nullable = false)
@@ -42,7 +42,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "user_birth_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date userBirthDate;
-    @Id
+    @NaturalId
     @Column(name = "user_phone", nullable = false)
     private long userPhone;
     @Basic

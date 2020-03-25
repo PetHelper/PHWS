@@ -18,7 +18,7 @@ public class PetController {
     @Autowired
     PetServiceImpl petService;
 
-    @GetMapping("/findAll")
+    @GetMapping("/find-all")
     ResponseEntity findAll() {
         List<PetWeb> petWebList = new ArrayList<>();
         for (Pet pet : petService.findAll()) {
@@ -27,7 +27,7 @@ public class PetController {
         return new ResponseEntity(petWebList, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/addPet", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/add-pet", consumes = "application/json", produces = "application/json")
     ResponseEntity addPet(@RequestBody List<PetWeb> petWebList) {
         for(PetWeb petDTO : petWebList) {
             petService.addPet(PetMapper.PET_MAPPER.petWebToPet(petDTO));
