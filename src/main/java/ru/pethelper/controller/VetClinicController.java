@@ -14,6 +14,7 @@ public class VetClinicController {
 
     @GetMapping("/find")
     ResponseEntity getVetClinicsByDistrict(@RequestParam(name = "district") String district) {
+        System.out.println("123");
         return new ResponseEntity(vetClinicService.findVetClinicByDistrict(district), HttpStatus.OK);
     }
 }
