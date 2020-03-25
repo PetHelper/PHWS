@@ -11,7 +11,7 @@
 	<groupId>ru</groupId>
 	<artifactId>pethelper</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>PetHelper</name>
 	<description>Demo project for Spring Boot</description>
 
