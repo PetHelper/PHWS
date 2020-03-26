@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pethelper.controller.model.UserWeb;
 import ru.pethelper.controller.model.VetClinicWeb;
 import ru.pethelper.exception.UserAlreadyExistsException;
+import ru.pethelper.exception.VetClinicAlreadyExistsException;
 import ru.pethelper.mapper.UserMapper;
 import ru.pethelper.mapper.VetclinicMapper;
 import ru.pethelper.service.VetClinicService;
@@ -26,6 +27,10 @@ public class VetClinicController {
 
     @PostMapping(path = "add", consumes = "application/json", produces = "application/json")
     ResponseEntity add(@RequestBody @Valid VetClinicWeb vetClinicWeb) throws Exception {
-        return new ResponseEntity(vetClinicService.addVetClinic(VetclinicMapper.VET_MAPPER.VetClinicWebToVetClinic(vetClinicWeb)), HttpStatus.OK);
+        try {
+            return new ResponseEntity(vetClinicService.addVetClinic(VetclinicMapper.VET_MAPPER.VetClinicWebToVetClinic(vetClinicWeb)), HttpStatus.OK);
+        } catch (VetClinicAlreadyExistsException e) {
+            return new ResponseEntity(e.getMessage() , HttpStatus.BAD_REQUEST);
+        }
     }
 }

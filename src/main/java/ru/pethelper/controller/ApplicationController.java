@@ -14,10 +14,12 @@ import ru.pethelper.config.JwtTokenUtil;
 import ru.pethelper.controller.model.UserWeb;
 import ru.pethelper.dao.repositories.UserRepository;
 import ru.pethelper.domain.User;
+import ru.pethelper.exception.SignInException;
 import ru.pethelper.exception.UserAlreadyExistsException;
 import ru.pethelper.exception.UserNotActive;
 import ru.pethelper.exception.UserNotFound;
 import ru.pethelper.mapper.UserMapper;
+import ru.pethelper.service.UserService;
 import ru.pethelper.servlet.JwtRequest;
 import ru.pethelper.servlet.JwtResponse;
 import ru.pethelper.dao.UserEntity;
@@ -30,7 +32,7 @@ import java.util.Objects;
 @CrossOrigin
 public class ApplicationController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public ApplicationController(BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -61,14 +63,15 @@ public class ApplicationController {
     }
 
     @GetMapping("sign-in")
-    public ResponseEntity signIn(@RequestParam(name = "email") String email) throws Exception {
+    public ResponseEntity signIn(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) throws Exception {
         try {
-            return new ResponseEntity(new JwtResponse(userService.findByUserEmail(email)), HttpStatus.OK);
+            return new ResponseEntity(new JwtResponse(userService.findUserForSignIn(email, password)), HttpStatus.OK);
         } catch (UserNotActive e) {
-            return new ResponseEntity("You must activate your user on your email", HttpStatus.BAD_REQUEST);
-        }
-        catch (UserNotFound e) {
-            return new ResponseEntity("User Not Found!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (UserNotFound e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (SignInException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

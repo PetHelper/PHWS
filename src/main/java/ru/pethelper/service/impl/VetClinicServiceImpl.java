@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.pethelper.dao.VetClinicEntity;
 import ru.pethelper.dao.repositories.VetClinicRepository;
 import ru.pethelper.domain.VetClinic;
+import ru.pethelper.exception.VetClinicAlreadyExistsException;
 import ru.pethelper.mapper.VetclinicMapper;
 import ru.pethelper.service.VetClinicService;
 
@@ -26,12 +27,12 @@ public class VetClinicServiceImpl implements VetClinicService {
     }
 
     @Override
-    public String addVetClinic(VetClinic vetClinic) {
+    public String addVetClinic(VetClinic vetClinic) throws VetClinicAlreadyExistsException {
         if (vetClinicRepository.findByName(vetClinic.getName()).isEmpty()) {
             vetClinicRepository.save(VetclinicMapper.VET_MAPPER.vetClinicToVetClinicEntity(vetClinic));
             return "Vet clinic successfully added!";
         } else {
-            return "This VetClinic already exists!";
+            throw new VetClinicAlreadyExistsException(vetClinic.getName());
         }
     }
 }

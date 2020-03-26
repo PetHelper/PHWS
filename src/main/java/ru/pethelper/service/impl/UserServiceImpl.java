@@ -19,6 +19,7 @@ import ru.pethelper.dao.repositories.UserRepository;
 import ru.pethelper.dao.Role;
 import ru.pethelper.dao.UserEntity;
 import ru.pethelper.domain.User;
+import ru.pethelper.exception.SignInException;
 import ru.pethelper.exception.UserAlreadyExistsException;
 import ru.pethelper.exception.UserNotActive;
 import ru.pethelper.exception.UserNotFound;
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             mailSender.send(user.getUserEmail(), "Activation code", message);
         }
 
-        return "User successfully registred!";
+        return "User successfully registered!";
     }
 
     public boolean activateUser(String code) {
@@ -111,15 +112,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String findByUserEmail(String email) throws Exception {
-        System.out.println("Email : " + email);
+    public String findUserForSignIn(String email, String password) throws Exception {
         User user = UserMapper.USER_MAPPER.userEntityToUser(userRepo.findByUserEmail(email));
         if (user != null) {
-            System.out.println(user.isActive());
-            if (user.isActive()) {
-                return createAuthenticationToken(new JwtRequest(user.getUsername(), user.getPassword()));
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                if (user.isActive()) {
+                    return createAuthenticationToken(new JwtRequest(user.getUsername(), user.getPassword()));
+                } else {
+                    throw new UserNotActive(email);
+                }
             } else {
-                throw new UserNotActive(email);
+                throw new SignInException(email);
             }
         } else {
             throw new UserNotFound(email);
@@ -128,8 +131,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public String createAuthenticationToken(JwtRequest authenticationRequest)
             throws Exception {
-
-        System.out.println("Password 1 : " + authenticationRequest.getPassword());
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
