@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface VetClinicRepository extends JpaRepository<VetClinicEntity, Long> {
     List<VetClinicEntity> findByDistrict(String district);
+
+    List<VetClinicEntity> findByName(String name);
 }

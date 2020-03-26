@@ -16,6 +16,7 @@ import ru.pethelper.dao.repositories.UserRepository;
 import ru.pethelper.domain.User;
 import ru.pethelper.exception.UserAlreadyExistsException;
 import ru.pethelper.exception.UserNotActive;
+import ru.pethelper.exception.UserNotFound;
 import ru.pethelper.mapper.UserMapper;
 import ru.pethelper.servlet.JwtRequest;
 import ru.pethelper.servlet.JwtResponse;
@@ -46,7 +47,6 @@ public class ApplicationController {
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("activate/{code}")
@@ -66,6 +66,9 @@ public class ApplicationController {
             return new ResponseEntity(new JwtResponse(userService.findByUserEmail(email)), HttpStatus.OK);
         } catch (UserNotActive e) {
             return new ResponseEntity("You must activate your user on your email", HttpStatus.BAD_REQUEST);
+        }
+        catch (UserNotFound e) {
+            return new ResponseEntity("User Not Found!", HttpStatus.BAD_REQUEST);
         }
     }
 }

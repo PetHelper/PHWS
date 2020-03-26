@@ -1,12 +1,24 @@
 package ru.pethelper.controller.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class VetClinicWeb {
+    @NotBlank(message = "Address cannot be empty")
+    @NotNull(message = "Address could not be NULL")
     private String address;
+    @NotBlank(message = "District cannot be empty")
+    @NotNull(message = "District could not be NULL")
     private String district;
-    private Integer rate;
+    @NotBlank(message = "Name cannot be empty")
+    @NotNull(message = "Name could not be NULL")
     private String name;
     private String site;
+    @NotBlank(message = "Email cannot be empty")
+    @NotNull(message = "Email could not be NULL")
     private String email;
+    @NotBlank(message = "PhoneNumbers cannot be empty")
+    @NotNull(message = "PhoneNumbers could not be NULL")
     private String phoneNumbers;
 
     public String getAddress() {
@@ -23,14 +35,6 @@ public class VetClinicWeb {
 
     public void setDistrict(String district) {
         this.district = district;
-    }
-
-    public Integer getRate() {
-        return rate;
-    }
-
-    public void setRate(Integer rate) {
-        this.rate = rate;
     }
 
     public String getName() {

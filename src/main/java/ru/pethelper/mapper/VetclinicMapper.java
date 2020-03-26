@@ -34,7 +34,6 @@ public interface VetclinicMapper {
 
     @Mappings({@Mapping(target = "address", source = "domain.address"),
             @Mapping(target = "district", source = "domain.district"),
-            @Mapping(target = "rate", source = "domain.rate"),
             @Mapping(target = "name", source = "domain.name"),
             @Mapping(target = "site", source = "domain.site"),
             @Mapping(target = "email", source = "domain.email"),
@@ -43,7 +42,6 @@ public interface VetclinicMapper {
 
     @Mappings({@Mapping(target = "address", source = "web.address"),
             @Mapping(target = "district", source = "web.district"),
-            @Mapping(target = "rate", source = "web.rate"),
             @Mapping(target = "name", source = "web.name"),
             @Mapping(target = "site", source = "web.site"),
             @Mapping(target = "email", source = "web.email"),

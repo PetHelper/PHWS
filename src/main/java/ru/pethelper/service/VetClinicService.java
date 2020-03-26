@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface VetClinicService {
     List<VetClinic> findVetClinicByDistrict(String district);
+
+    String addVetClinic(VetClinic vetClinic);
 }

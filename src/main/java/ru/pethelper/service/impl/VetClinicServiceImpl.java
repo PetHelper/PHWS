@@ -24,4 +24,14 @@ public class VetClinicServiceImpl implements VetClinicService {
         }
         return vetClinicList;
     }
+
+    @Override
+    public String addVetClinic(VetClinic vetClinic) {
+        if (vetClinicRepository.findByName(vetClinic.getName()).isEmpty()) {
+            vetClinicRepository.save(VetclinicMapper.VET_MAPPER.vetClinicToVetClinicEntity(vetClinic));
+            return "Vet clinic successfully added!";
+        } else {
+            return "This VetClinic already exists!";
+        }
+    }
 }
