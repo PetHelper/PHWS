@@ -3,30 +3,20 @@ package ru.pethelper.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.pethelper.config.JwtTokenUtil;
 import ru.pethelper.controller.model.UserWeb;
-import ru.pethelper.dao.repositories.UserRepository;
-import ru.pethelper.domain.User;
 import ru.pethelper.exception.SignInException;
 import ru.pethelper.exception.UserAlreadyExistsException;
 import ru.pethelper.exception.UserNotActive;
 import ru.pethelper.exception.UserNotFound;
 import ru.pethelper.mapper.UserMapper;
 import ru.pethelper.service.UserService;
-import ru.pethelper.servlet.JwtRequest;
 import ru.pethelper.servlet.JwtResponse;
-import ru.pethelper.dao.UserEntity;
-import ru.pethelper.service.impl.UserServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin
@@ -35,12 +25,15 @@ public class ApplicationController {
     private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     public ApplicationController(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping(path = "register", consumes = "application/json", produces = "application/json")
-    ResponseEntity register(@RequestBody @Valid UserWeb userWeb) throws Exception {
+    ResponseEntity register(@RequestBody @Valid UserWeb userWeb) {
         if (userWeb.getPassword() != null && !userWeb.getPassword().equals(userWeb.getMatchingPassword())) {
             return new ResponseEntity("Passwords dont match!", HttpStatus.BAD_REQUEST);
         }
@@ -71,6 +64,16 @@ public class ApplicationController {
         } catch (UserNotFound e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (SignInException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("get-user")
+    public ResponseEntity getUser(HttpServletRequest request) {
+        int userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        try {
+            return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
+        } catch (UserNotFound e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -14,7 +14,9 @@ import ru.pethelper.domain.VetClinic;
 public interface VetclinicMapper {
     VetclinicMapper VET_MAPPER = Mappers.getMapper(VetclinicMapper.class);
 
-    @Mappings({@Mapping(target = "address", source = "domain.address"),
+    @Mappings({
+            @Mapping(target = "id", source = "domain.id"),
+            @Mapping(target = "address", source = "domain.address"),
             @Mapping(target = "district", source = "domain.district"),
             @Mapping(target = "rate", source = "domain.rate"),
             @Mapping(target = "name", source = "domain.name"),
@@ -23,7 +25,9 @@ public interface VetclinicMapper {
             @Mapping(target = "phoneNumbers", source = "domain.phoneNumbers")})
     VetClinicEntity vetClinicToVetClinicEntity(VetClinic domain);
 
-    @Mappings({@Mapping(target = "address", source = "dto.address"),
+    @Mappings({
+            @Mapping(target = "id", source = "dto.id"),
+            @Mapping(target = "address", source = "dto.address"),
             @Mapping(target = "district", source = "dto.district"),
             @Mapping(target = "rate", source = "dto.rate"),
             @Mapping(target = "name", source = "dto.name"),
@@ -32,7 +36,9 @@ public interface VetclinicMapper {
             @Mapping(target = "phoneNumbers", source = "dto.phoneNumbers")})
     VetClinic VetClinicEntityToVetClinic(VetClinicEntity dto);
 
-    @Mappings({@Mapping(target = "address", source = "domain.address"),
+    @Mappings({
+            @Mapping(target = "id", source = "domain.id"),
+            @Mapping(target = "address", source = "domain.address"),
             @Mapping(target = "district", source = "domain.district"),
             @Mapping(target = "name", source = "domain.name"),
             @Mapping(target = "site", source = "domain.site"),
@@ -40,11 +46,13 @@ public interface VetclinicMapper {
             @Mapping(target = "phoneNumbers", source = "domain.phoneNumbers")})
     VetClinicWeb VetClinicToVetClinicWeb(VetClinic domain);
 
-    @Mappings({@Mapping(target = "address", source = "web.address"),
-            @Mapping(target = "district", source = "web.district"),
-            @Mapping(target = "name", source = "web.name"),
-            @Mapping(target = "site", source = "web.site"),
-            @Mapping(target = "email", source = "web.email"),
-            @Mapping(target = "phoneNumbers", source = "web.phoneNumbers")})
+    @Mappings(
+            {@Mapping(target = "id", source = "web.id"),
+                    @Mapping(target = "address", source = "web.address"),
+                    @Mapping(target = "district", source = "web.district"),
+                    @Mapping(target = "name", source = "web.name"),
+                    @Mapping(target = "site", source = "web.site"),
+                    @Mapping(target = "email", source = "web.email"),
+                    @Mapping(target = "phoneNumbers", source = "web.phoneNumbers")})
     VetClinic VetClinicWebToVetClinic(VetClinicWeb web);
 }

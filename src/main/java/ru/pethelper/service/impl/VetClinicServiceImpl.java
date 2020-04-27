@@ -17,13 +17,26 @@ public class VetClinicServiceImpl implements VetClinicService {
     @Autowired
     VetClinicRepository vetClinicRepository;
 
-    @Override
-    public List<VetClinic> findVetClinicByDistrict(String district) {
+    private List<VetClinic> getVetClinicList(String condition, VetClinicListsInterface vetClinicListsInterface) {
         List<VetClinic> vetClinicList = new ArrayList<>();
-        for (VetClinicEntity vetClinicEntity : vetClinicRepository.findByDistrict(district)) {
+        for (VetClinicEntity vetClinicEntity : vetClinicListsInterface.getVetClinics(condition)) {
             vetClinicList.add(VetclinicMapper.VET_MAPPER.VetClinicEntityToVetClinic(vetClinicEntity));
         }
         return vetClinicList;
+    }
+
+    public interface VetClinicListsInterface {
+        List<VetClinicEntity> getVetClinics(String condition);
+    }
+
+    @Override
+    public List<VetClinic> findVetClinicByDistrict(String district) {
+        return getVetClinicList(district, condition -> {
+            if (condition != null) {
+                return vetClinicRepository.findByDistrict(condition);
+            }
+            return vetClinicRepository.findAll();
+        });
     }
 
     @Override
@@ -34,5 +47,10 @@ public class VetClinicServiceImpl implements VetClinicService {
         } else {
             throw new VetClinicAlreadyExistsException(vetClinic.getName());
         }
+    }
+
+    @Override
+    public VetClinic getVetClinic(long vetClinicId) {
+        return VetclinicMapper.VET_MAPPER.VetClinicEntityToVetClinic(vetClinicRepository.findById(vetClinicId));
     }
 }

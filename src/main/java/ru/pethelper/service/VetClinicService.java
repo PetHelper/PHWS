@@ -9,4 +9,6 @@ public interface VetClinicService {
     List<VetClinic> findVetClinicByDistrict(String district);
 
     String addVetClinic(VetClinic vetClinic) throws VetClinicAlreadyExistsException;
+
+    VetClinic getVetClinic(long vetClinicId);
 }

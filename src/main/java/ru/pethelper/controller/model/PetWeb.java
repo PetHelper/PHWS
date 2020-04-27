@@ -1,8 +1,11 @@
 package ru.pethelper.controller.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Date;
 
 public class PetWeb {
+    private Integer petId;
     private String petName;
     private String colour;
     private Integer weight;
@@ -12,7 +15,16 @@ public class PetWeb {
     private String tagNumber;
     private String pedigreeNum;
     private String animalCardNum;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthDate;
+
+    public Integer getPetId() {
+        return petId;
+    }
+
+    public void setPetId(Integer petId) {
+        this.petId = petId;
+    }
 
     public String getPetName() {
         return petName;

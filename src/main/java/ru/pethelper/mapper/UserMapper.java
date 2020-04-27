@@ -50,4 +50,5 @@ public interface UserMapper {
             @Mapping(target = "password", source = "web.password"),
             @Mapping(target = "userBirthDate", source = "web.userBirthDate", dateFormat = "dd-MM-yyyy HH:mm:ss")})
     User userWebToUser(UserWeb web);
+
 }

@@ -3,6 +3,7 @@ package ru.pethelper.domain;
 import java.sql.Date;
 
 public class Pet {
+    private Integer petId;
     private String petName;
     private String colour;
     private Integer weight;
@@ -13,6 +14,14 @@ public class Pet {
     private String pedigreeNum;
     private String animalCardNum;
     private Date birthDate;
+
+    public Integer getPetId() {
+        return petId;
+    }
+
+    public void setPetId(Integer petId) {
+        this.petId = petId;
+    }
 
     public String getPetName() {
         return petName;

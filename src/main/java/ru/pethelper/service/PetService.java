@@ -5,7 +5,9 @@ import ru.pethelper.domain.Pet;
 import java.util.List;
 
 public interface PetService {
-    long addPet(Pet pet);
+    void addPet(Pet pet, int userId);
 
-    List<Pet> findAll();
+    List<Pet> getAll(int userId);
+
+    Pet getPet(int petId);
 }

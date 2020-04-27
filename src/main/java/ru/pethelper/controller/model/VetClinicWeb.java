@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class VetClinicWeb {
+    private long id;
     @NotBlank(message = "Address cannot be empty")
     @NotNull(message = "Address could not be NULL")
     private String address;
@@ -20,6 +21,14 @@ public class VetClinicWeb {
     @NotBlank(message = "PhoneNumbers cannot be empty")
     @NotNull(message = "PhoneNumbers could not be NULL")
     private String phoneNumbers;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getAddress() {
         return address;

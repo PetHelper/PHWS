@@ -2,8 +2,6 @@ package ru.pethelper.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,9 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.pethelper.config.JwtTokenUtil;
-import ru.pethelper.dao.repositories.UserRepository;
+import ru.pethelper.config.UserJWTDTO;
 import ru.pethelper.dao.Role;
 import ru.pethelper.dao.UserEntity;
+import ru.pethelper.dao.repositories.UserRepository;
 import ru.pethelper.domain.User;
 import ru.pethelper.exception.SignInException;
 import ru.pethelper.exception.UserAlreadyExistsException;
@@ -28,7 +27,10 @@ import ru.pethelper.service.MailSender;
 import ru.pethelper.service.UserService;
 import ru.pethelper.servlet.JwtRequest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -50,13 +52,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Value("${application.activate.url}")
     private String activateUrl;
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepo.findByUsername(username);
+    public User getUser(int userId) throws UserNotFound {
+        User user = UserMapper.USER_MAPPER.userEntityToUser(userRepo.findByUserId(userId));
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UserNotFound(user.getUsername());
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), passwordEncoder.encode(user.getPassword()),
-                new ArrayList<>());
+        return user;
     }
 
     public String addUser(User user) throws UserAlreadyExistsException {
@@ -145,8 +146,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
 
-        System.out.println("Password 2 : " + password);
-
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
@@ -154,5 +153,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+
+        return new UserJWTDTO(user.getUserId(), user.getUsername(), user.getUserEmail(), user.isActive(), passwordEncoder.encode(user.getPassword()));
     }
 }

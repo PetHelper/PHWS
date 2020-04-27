@@ -1,6 +1,7 @@
 package ru.pethelper.domain;
 
 public class VetClinic {
+    private long id;
     private String address;
     private String district;
     private Integer rate;
@@ -8,6 +9,14 @@ public class VetClinic {
     private String site;
     private String email;
     private String phoneNumbers;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getAddress() {
         return address;

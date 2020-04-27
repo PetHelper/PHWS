@@ -10,6 +10,8 @@ import java.util.Set;
 public class PetEntity {
     @Id
     @Column(name = "pet_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_id_generator")
+    @SequenceGenerator(name = "pet_id_generator", sequenceName = "pet_id_seq", allocationSize = 1)
     private int petId;
     @Basic
     @Column(name = "pet_name", nullable = false, length = 50)
@@ -159,4 +161,8 @@ public class PetEntity {
 
     @ManyToMany
     Set<PetXVaccinationEntity> petXVaccinationEntities;
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }

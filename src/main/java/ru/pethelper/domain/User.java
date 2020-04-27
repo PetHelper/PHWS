@@ -1,5 +1,7 @@
 package ru.pethelper.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
@@ -9,6 +11,7 @@ public class User {
     private String userEmail;
     private Date userBirthDate;
     private long userPhone;
+    @JsonIgnore
     private String password;
     private Date userRegDate;
     private boolean active;

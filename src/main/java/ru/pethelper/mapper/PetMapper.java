@@ -38,7 +38,9 @@ public interface PetMapper {
             @Mapping(target = "birthDate", source = "dto.birthDate", dateFormat = "dd-MM-yyyy HH:mm:ss")})
     Pet petEntityToPet(PetEntity dto);
 
-    @Mappings({@Mapping(target = "petName", source = "domain.petName"),
+    @Mappings({
+            @Mapping(target = "petId", source = "domain.petId"),
+            @Mapping(target = "petName", source = "domain.petName"),
             @Mapping(target = "colour", source = "domain.colour"),
             @Mapping(target = "weight", source = "domain.weight"),
             @Mapping(target = "breed", source = "domain.breed"),
@@ -50,7 +52,9 @@ public interface PetMapper {
             @Mapping(target = "birthDate", source = "domain.birthDate", dateFormat = "dd-MM-yyyy HH:mm:ss")})
     PetWeb petToPetWeb(Pet domain);
 
-    @Mappings({@Mapping(target = "petName", source = "web.petName"),
+    @Mappings({
+            @Mapping(target = "petId", source = "web.petId"),
+            @Mapping(target = "petName", source = "web.petName"),
             @Mapping(target = "colour", source = "web.colour"),
             @Mapping(target = "weight", source = "web.weight"),
             @Mapping(target = "breed", source = "web.breed"),
