@@ -22,7 +22,7 @@ public class PetServiceImpl implements PetService {
     UserRepository userRepo;
 
     @Override
-    public void addPet(Pet pet, int userId) {
+    public void addPet(Pet pet, long userId) {
         UserEntity userEntity = userRepo.findByUserId(userId);
         PetEntity petEntity = PetMapper.PET_MAPPER.petToPetEntity(pet);
         petEntity.setUserEntity(userEntity);
@@ -30,7 +30,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<Pet> getAll(int userId) {
+    public List<Pet> getAll(long userId) {
         UserEntity userEntity = userRepo.findByUserId(userId);
         List<Pet> petList = new ArrayList<>();
         for (PetEntity petEntity : petRepository.findByUserEntity(userEntity)) {
@@ -40,7 +40,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Pet getPet(int petId) {
+    public Pet getPet(long petId) {
         return PetMapper.PET_MAPPER.petEntityToPet(petRepository.findByPetId(petId));
     }
 }

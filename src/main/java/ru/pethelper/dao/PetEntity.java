@@ -12,7 +12,7 @@ public class PetEntity {
     @Column(name = "pet_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_id_generator")
     @SequenceGenerator(name = "pet_id_generator", sequenceName = "pet_id_seq", allocationSize = 1)
-    private int petId;
+    private long petId;
     @Basic
     @Column(name = "pet_name", nullable = false, length = 50)
     private String petName;
@@ -44,11 +44,11 @@ public class PetEntity {
     @Column(name = "birth_date", nullable = false)
     private Date birthDate;
 
-    public int getPetId() {
+    public long getPetId() {
         return petId;
     }
 
-    public void setPetId(int petId) {
+    public void setPetId(long petId) {
         this.petId = petId;
     }
 

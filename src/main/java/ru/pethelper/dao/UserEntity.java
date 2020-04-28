@@ -1,14 +1,11 @@
 package ru.pethelper.dao;
 
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.pethelper.servlet.validation.ValidPassword;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -21,7 +18,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_user_id_generator")
     @SequenceGenerator(name = "pet_user_id_generator", sequenceName = "pet_user_id_seq", allocationSize = 1)
-    private int userId;
+    private long userId;
     @Basic
     @Column(name = "user_name", nullable = false, length = 50)
     private String username;
@@ -54,6 +51,10 @@ public class UserEntity implements UserDetails {
     @Basic
     @Column(name = "activation_code")
     private String activationCode;
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Lob
+    @Column(name = "user_image")
+    private byte[] userImage;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -149,7 +150,7 @@ public class UserEntity implements UserDetails {
         this.activationCode = activationCode;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -199,6 +200,14 @@ public class UserEntity implements UserDetails {
 
     public void setUserPhone(long userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public byte[] getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(byte[] userImage) {
+        this.userImage = userImage;
     }
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.PERSIST)

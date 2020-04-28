@@ -7,13 +7,13 @@ import java.util.Collection;
 
 public class UserJWTDTO implements UserDetails {
 
-    private int userId;
+    private long userId;
     private String username;
     private String userEmail;
     private boolean active;
     private String password;
 
-    public UserJWTDTO(int userId, String username, String userEmail, boolean active, String password) {
+    public UserJWTDTO(long userId, String username, String userEmail, boolean active, String password) {
         this.userId = userId;
         this.username = username;
         this.userEmail = userEmail;
@@ -56,7 +56,7 @@ public class UserJWTDTO implements UserDetails {
         return active;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 

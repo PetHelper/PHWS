@@ -2,6 +2,7 @@ package ru.pethelper.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pethelper.config.JwtTokenUtil;
 import ru.pethelper.config.UserJWTDTO;
 import ru.pethelper.dao.Role;
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Value("${application.activate.url}")
     private String activateUrl;
 
-    public User getUser(int userId) throws UserNotFound {
+    public User getUser(long userId) throws UserNotFound {
         User user = UserMapper.USER_MAPPER.userEntityToUser(userRepo.findByUserId(userId));
         if (user == null) {
             throw new UserNotFound(user.getUsername());
@@ -162,5 +164,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         return new UserJWTDTO(user.getUserId(), user.getUsername(), user.getUserEmail(), user.isActive(), passwordEncoder.encode(user.getPassword()));
+    }
+
+    @Override
+    public void saveImage(long userId, MultipartFile image) throws Exception {
+        UserEntity user = userRepo.getOne((long) userId);
+        user.setUserImage(image.getBytes());
+        userRepo.save(user);
+    }
+
+    @Override
+    public ByteArrayResource getImage(long userId) throws Exception {
+        UserEntity user = userRepo.getOne(userId);
+        return new ByteArrayResource(user.getUserImage());
     }
 }

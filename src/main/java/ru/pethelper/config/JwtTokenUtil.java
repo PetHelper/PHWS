@@ -22,8 +22,8 @@ public class JwtTokenUtil implements Serializable {
     private String secret;
 
     //retrieve username from jwt token
-    public Integer getIdFromToken(String token) {
-        return getClaimFromToken(token, claims -> (Integer) claims.get("id"));
+    public Long getIdFromToken(String token) {
+        return getClaimFromToken(token, claims -> ((Number) claims.get("id")).longValue());
     }
 
     //retrieve username from jwt token

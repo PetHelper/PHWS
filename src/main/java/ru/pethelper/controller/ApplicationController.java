@@ -2,9 +2,11 @@ package ru.pethelper.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pethelper.config.JwtTokenUtil;
 import ru.pethelper.controller.model.UserWeb;
 import ru.pethelper.exception.SignInException;
@@ -70,11 +72,35 @@ public class ApplicationController {
 
     @GetMapping("get-user")
     public ResponseEntity getUser(HttpServletRequest request) {
-        int userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
             return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
         } catch (UserNotFound e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("save-user-photo")
+    public ResponseEntity saveUserPhoto(HttpServletRequest request, @RequestParam("image") MultipartFile image) {
+        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        try {
+            userService.saveImage(userId, image);
+            return new ResponseEntity("Successfully uploaded image", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("get-user-photo")
+    public ResponseEntity<?> getUserPhoto(HttpServletRequest request) {
+        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        try {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("image/jpeg"))
+                    .body(userService.getImage(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Could not upload image");
         }
     }
 }

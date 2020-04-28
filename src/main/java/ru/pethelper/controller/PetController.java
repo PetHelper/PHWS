@@ -21,13 +21,13 @@ public class PetController {
 
     @GetMapping("/get-all")
     ResponseEntity getAll(HttpServletRequest request) {
-        int userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         return new ResponseEntity(petService.getAll(userId), HttpStatus.OK);
     }
 
     @PostMapping(path = "/add-pet", consumes = "application/json", produces = "application/json")
     ResponseEntity addPet(HttpServletRequest request, @RequestBody PetWeb petWeb) {
-        int userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
+        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
             petService.addPet(PetMapper.PET_MAPPER.petWebToPet(petWeb), userId);
             return new ResponseEntity("Pet added!", HttpStatus.OK);
@@ -40,4 +40,6 @@ public class PetController {
     ResponseEntity getPet(@RequestHeader int petId) {
         return new ResponseEntity(petService.getPet(petId), HttpStatus.OK);
     }
+
+    //TODO добавить загрузку и получение фотки животного
 }
