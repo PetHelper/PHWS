@@ -9,6 +9,7 @@ import ru.pethelper.dao.UserEntity;
 import ru.pethelper.dao.repositories.PetRepository;
 import ru.pethelper.dao.repositories.UserRepository;
 import ru.pethelper.domain.Pet;
+import ru.pethelper.exception.UsersPetException;
 import ru.pethelper.mapper.PetMapper;
 import ru.pethelper.service.PetService;
 
@@ -42,20 +43,33 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Pet getPet(long petId) {
-        return PetMapper.PET_MAPPER.petEntityToPet(petRepository.findByPetId(petId));
+    public Pet getPet(long petId, long userId) throws UsersPetException {
+        UserEntity userEntity = userRepo.findByUserId(userId);
+        Pet pet = PetMapper.PET_MAPPER.petEntityToPet(petRepository.getOneByPetIdAndUserEntity(petId, userEntity));
+        petUserConnectionCheck(pet);
+        return pet;
     }
 
     @Override
-    public void saveImage(long petId, MultipartFile image) throws Exception {
-        PetEntity petEntity = petRepository.getOne(petId);
+    public void saveImage(long petId, long userId, MultipartFile image) throws Exception {
+        UserEntity userEntity = userRepo.findByUserId(userId);
+        PetEntity petEntity = petRepository.getOneByPetIdAndUserEntity(petId, userEntity);
+        petUserConnectionCheck(petEntity);
         petEntity.setPetImage(image.getBytes());
         petRepository.save(petEntity);
     }
 
     @Override
-    public ByteArrayResource getImage(long petId) throws Exception {
-        PetEntity petEntity = petRepository.getOne(petId);
+    public ByteArrayResource getImage(long petId, long userId) throws Exception {
+        UserEntity userEntity = userRepo.findByUserId(userId);
+        PetEntity petEntity = petRepository.getOneByPetIdAndUserEntity(petId, userEntity);
+        petUserConnectionCheck(petEntity);
         return new ByteArrayResource(petEntity.getPetImage());
+    }
+
+    private <T> void petUserConnectionCheck(T pet) throws UsersPetException {
+        if (pet == null) {
+            throw new UsersPetException();
+        }
     }
 }

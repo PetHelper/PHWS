@@ -45,7 +45,7 @@ public class ApplicationController {
             return new ResponseEntity(new Response(0, userService.addUser(UserMapper.USER_MAPPER.userWebToUser(userWeb)))
                     , HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.toString()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,40 +65,37 @@ public class ApplicationController {
         try {
             return new ResponseEntity(new JwtResponse(userService.findUserForSignIn(email, password)), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.toString()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("get-user")
     public ResponseEntity getUser(HttpServletRequest request) {
-        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
-            return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
+            return new ResponseEntity(userService.getUser(jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7))), HttpStatus.OK);
         } catch (UserNotFound e) {
-            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.toString()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("save-user-photo")
     public ResponseEntity saveUserPhoto(HttpServletRequest request, @RequestParam("image") MultipartFile image) {
-        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
-            userService.saveImage(userId, image);
+            userService.saveImage(jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7)), image);
             return new ResponseEntity(new Response(0, "Successfully uploaded image"), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.toString()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("get-user-photo")
     public ResponseEntity<?> getUserPhoto(HttpServletRequest request) {
-        long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/jpeg"))
-                    .body(userService.getImage(userId));
+                    .body(userService.getImage(jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7))));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new Response(1, "Could not upload image"));
+            return ResponseEntity.badRequest().body(new Response(1, e.toString() + " could not upload image"));
         }
     }
 
