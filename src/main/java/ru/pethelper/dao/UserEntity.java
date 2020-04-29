@@ -41,7 +41,7 @@ public class UserEntity implements UserDetails {
     private Date userBirthDate;
     @NaturalId
     @Column(name = "user_phone", nullable = false)
-    private long userPhone;
+    private String userPhone;
     @Basic
     @Column(name = "password", nullable = false)
     private String password;
@@ -194,11 +194,11 @@ public class UserEntity implements UserDetails {
         this.userBirthDate = userBirthDate;
     }
 
-    public long getUserPhone() {
+    public String getUserPhone() {
         return userPhone;
     }
 
-    public void setUserPhone(long userPhone) {
+    public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
     }
 

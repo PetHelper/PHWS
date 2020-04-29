@@ -21,8 +21,10 @@ public class UserWeb {
     @NotNull(message = "Email could not be NULL")
     private String userEmail;
     private Date userBirthDate;
-    @ValidPhoneNumber(message = "Phone could not be empty")
-    private long userPhone;
+    @NotBlank(message = "Phone cannot be empty")
+    @NotNull(message = "Phone could not be NULL")
+    @ValidPhoneNumber(message = "Phone is not valid")
+    private String userPhone;
     @NotBlank(message = "Password could not be empty")
     @NotNull(message = "Password could not be NULL")
     @ValidPassword
@@ -71,11 +73,11 @@ public class UserWeb {
         this.userBirthDate = userBirthDate;
     }
 
-    public long getUserPhone() {
+    public String getUserPhone() {
         return userPhone;
     }
 
-    public void setUserPhone(long userPhone) {
+    public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
     }
 

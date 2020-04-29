@@ -10,7 +10,7 @@ public class User {
     private String userAddress;
     private String userEmail;
     private Date userBirthDate;
-    private long userPhone;
+    private String userPhone;
     @JsonIgnore
     private String password;
     private Date userRegDate;
@@ -56,11 +56,11 @@ public class User {
         this.userBirthDate = userBirthDate;
     }
 
-    public long getUserPhone() {
+    public String getUserPhone() {
         return userPhone;
     }
 
-    public void setUserPhone(long userPhone) {
+    public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
     }
 
