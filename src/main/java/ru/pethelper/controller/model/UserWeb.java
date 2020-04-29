@@ -1,6 +1,7 @@
 package ru.pethelper.controller.model;
 
 import ru.pethelper.servlet.validation.ValidPassword;
+import ru.pethelper.servlet.validation.ValidPhoneNumber;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ public class UserWeb {
     @NotNull(message = "Email could not be NULL")
     private String userEmail;
     private Date userBirthDate;
-    @NotNull(message = "Phone could not be empty")
+    @ValidPhoneNumber(message = "Phone could not be empty")
     private long userPhone;
     @NotBlank(message = "Password could not be empty")
     @NotNull(message = "Password could not be NULL")

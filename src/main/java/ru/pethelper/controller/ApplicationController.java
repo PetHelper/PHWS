@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.pethelper.config.JwtTokenUtil;
@@ -17,6 +19,8 @@ import ru.pethelper.servlet.JwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -96,5 +100,21 @@ public class ApplicationController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new Response(1, "Could not upload image"));
         }
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Response handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : errors.entrySet()) {
+            stringBuilder.append(entry.getValue() + " ; ");
+        }
+        return new Response(1, stringBuilder.toString());
     }
 }
