@@ -8,10 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.pethelper.config.JwtTokenUtil;
+import ru.pethelper.controller.model.Response;
 import ru.pethelper.controller.model.UserWeb;
-import ru.pethelper.exception.SignInException;
-import ru.pethelper.exception.UserAlreadyExistsException;
-import ru.pethelper.exception.UserNotActive;
 import ru.pethelper.exception.UserNotFound;
 import ru.pethelper.mapper.UserMapper;
 import ru.pethelper.service.UserService;
@@ -37,12 +35,13 @@ public class ApplicationController {
     @PostMapping(path = "register", consumes = "application/json", produces = "application/json")
     ResponseEntity register(@RequestBody @Valid UserWeb userWeb) {
         if (userWeb.getPassword() != null && !userWeb.getPassword().equals(userWeb.getMatchingPassword())) {
-            return new ResponseEntity("Passwords dont match!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, "Passwords dont match!"), HttpStatus.BAD_REQUEST);
         }
         try {
-            return new ResponseEntity(userService.addUser(UserMapper.USER_MAPPER.userWebToUser(userWeb)), HttpStatus.BAD_REQUEST);
-        } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(0, userService.addUser(UserMapper.USER_MAPPER.userWebToUser(userWeb)))
+                    , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -51,9 +50,9 @@ public class ApplicationController {
         boolean isActivated = userService.activateUser(code);
 
         if (isActivated) {
-            return new ResponseEntity("User successfully activated", HttpStatus.OK);
+            return new ResponseEntity(new Response(0, "User successfully activated"), HttpStatus.OK);
         } else {
-            return new ResponseEntity("Activation code is not found!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, "Activation code is not found!"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,12 +60,8 @@ public class ApplicationController {
     public ResponseEntity signIn(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) throws Exception {
         try {
             return new ResponseEntity(new JwtResponse(userService.findUserForSignIn(email, password)), HttpStatus.OK);
-        } catch (UserNotActive e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (UserNotFound e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (SignInException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,7 +71,7 @@ public class ApplicationController {
         try {
             return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
         } catch (UserNotFound e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -85,9 +80,9 @@ public class ApplicationController {
         long userId = jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7));
         try {
             userService.saveImage(userId, image);
-            return new ResponseEntity("Successfully uploaded image", HttpStatus.OK);
+            return new ResponseEntity(new Response(0, "Successfully uploaded image"), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Response(1, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -99,8 +94,7 @@ public class ApplicationController {
                     .contentType(MediaType.parseMediaType("image/jpeg"))
                     .body(userService.getImage(userId));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Could not upload image");
+            return ResponseEntity.badRequest().body(new Response(1, "Could not upload image"));
         }
     }
 }

@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void saveImage(long userId, MultipartFile image) throws Exception {
-        UserEntity user = userRepo.getOne((long) userId);
+        UserEntity user = userRepo.getOne(userId);
         user.setUserImage(image.getBytes());
         userRepo.save(user);
     }

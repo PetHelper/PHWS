@@ -1,7 +1,9 @@
 package ru.pethelper.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pethelper.dao.PetEntity;
 import ru.pethelper.dao.UserEntity;
 import ru.pethelper.dao.repositories.PetRepository;
@@ -42,5 +44,18 @@ public class PetServiceImpl implements PetService {
     @Override
     public Pet getPet(long petId) {
         return PetMapper.PET_MAPPER.petEntityToPet(petRepository.findByPetId(petId));
+    }
+
+    @Override
+    public void saveImage(long petId, MultipartFile image) throws Exception {
+        PetEntity petEntity = petRepository.getOne(petId);
+        petEntity.setPetImage(image.getBytes());
+        petRepository.save(petEntity);
+    }
+
+    @Override
+    public ByteArrayResource getImage(long petId) throws Exception {
+        PetEntity petEntity = petRepository.getOne(petId);
+        return new ByteArrayResource(petEntity.getPetImage());
     }
 }

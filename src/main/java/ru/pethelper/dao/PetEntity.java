@@ -1,5 +1,7 @@
 package ru.pethelper.dao;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -43,6 +45,10 @@ public class PetEntity {
     @Basic
     @Column(name = "birth_date", nullable = false)
     private Date birthDate;
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Lob
+    @Column(name = "pet_image")
+    private byte[] petImage;
 
     public long getPetId() {
         return petId;
@@ -130,6 +136,14 @@ public class PetEntity {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public byte[] getPetImage() {
+        return petImage;
+    }
+
+    public void setPetImage(byte[] petImage) {
+        this.petImage = petImage;
     }
 
     @Override
