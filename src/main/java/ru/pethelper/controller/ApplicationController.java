@@ -61,7 +61,7 @@ public class ApplicationController {
     }
 
     @GetMapping("sign-in")
-    public ResponseEntity signIn(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) throws Exception {
+    public ResponseEntity signIn(@RequestHeader(name = "email") String email, @RequestHeader(name = "password") String password) throws Exception {
         try {
             return new ResponseEntity(new JwtResponse(userService.findUserForSignIn(email, password)), HttpStatus.OK);
         } catch (Exception e) {

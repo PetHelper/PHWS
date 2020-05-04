@@ -33,7 +33,7 @@ public class VetClinicController {
     }
 
     @GetMapping("/get-vet")
-    ResponseEntity getVet(@RequestHeader(value = "vet-clinic-id") long vetClinicId) {
+    ResponseEntity getVet(@RequestParam(value = "vet-clinic-id") long vetClinicId) {
         System.out.println("What happened?");
         try {
             return new ResponseEntity(vetClinicService.getVetClinic(vetClinicId), HttpStatus.OK);

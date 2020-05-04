@@ -39,7 +39,7 @@ public class PetController {
     }
 
     @GetMapping("/get")
-    ResponseEntity getPet(HttpServletRequest request, @RequestHeader int petId) {
+    ResponseEntity getPet(HttpServletRequest request, @RequestParam int petId) {
         try {
             return new ResponseEntity(petService.getPet(petId, jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7))), HttpStatus.OK);
         } catch (UsersPetException e) {
@@ -48,7 +48,7 @@ public class PetController {
     }
 
     @PostMapping("/save-pet-photo")
-    public ResponseEntity savePetPhoto(HttpServletRequest request, @RequestHeader int petId, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity savePetPhoto(HttpServletRequest request, @RequestParam int petId, @RequestParam("image") MultipartFile image) {
         try {
             petService.saveImage(petId, jwtTokenUtil.getIdFromToken(request.getHeader("Authorization").substring(7)), image);
             return new ResponseEntity(new Response(0, "Successfully uploaded image"), HttpStatus.OK);
@@ -58,7 +58,7 @@ public class PetController {
     }
 
     @GetMapping("/get-pet-photo")
-    public ResponseEntity<?> getPetPhoto(HttpServletRequest request, @RequestHeader int petId) {
+    public ResponseEntity<?> getPetPhoto(HttpServletRequest request, @RequestParam int petId) {
         try {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/jpeg"))
